@@ -1,5 +1,9 @@
-// lib/prisma.ts
+import { PrismaClient } from '@prisma/client'
 
-// Temporary stub so `import { prisma } from '@/lib/prisma'` compiles.
-// This will NOT actually talk to a real database yet.
-export const prisma = {} as any
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
